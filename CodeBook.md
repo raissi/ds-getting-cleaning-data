@@ -78,3 +78,12 @@ The frame contains the average value by **activity and by suject** of different 
 # 2. The analysis
 We were asked to extract "_only the measurements on the mean and standard deviation for each measurement_", so we considered only the features which names included "mean()" or "std()". This is based on the original code book which states:
 _mean(): Mean value_ and _std(): Standard deviation_.
++ # Explaining the script code:
+  - First we load the _dplyr_ package which provides several useful fucntions, such as `group_by` and `summarize_each`
+  - We define the main fucntion `run_analysis` which calls other functions to perform different tasks. It takes the path to the data directory.
+  - the `mergeData` function This functions reads the two data sets (training and test) and merges them by rows
+  - the `getMeansAndStdsIndices` This function extracts a data frame of mean&std features names and indices. It takes as arg the directory where the features.txt. We use the regular expression `mean\\(\\)|std\\(\\)` so that we only select the features that contain _mean()_ and _std()_
+  - the `extractMeanAndStd` extracts the given columns (based on their given indices)
+  - the `labelActivities` reads the _activity_labels.txt_ file, and maps each activity code to a more readable label. E.g.: _WALKING_UPSTAIRS_ is mapped to _Walking Upstairs_. And then it merges the activity files (train and test) and finally it maps each activity value to the corresponding label, e.g: "6" is replaced with _Laying_
+  - the `addColumnLabels` reads the _labels.txt_ file (to be loaded with the script in the working directory) and rename the data frame columns with the values from this file
+  - Finally we read the subjects files (_subject_train.txt_ and _subject_test.txt_), merge them by rows and add them to our data frame. After that, we use the `group_by` function to group values by activity and by subject. And to get the final tidy data we call `summarise_each` that applies the given function (_mean_ in our case) to each column.
